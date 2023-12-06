@@ -308,6 +308,10 @@
                     <option>30-34</option>
                     <option>35-39</option>
                     <option>40-44</option>
+                    <option>45-49</option>
+                    <option>50-54</option>
+                    <option>55-59</option>
+                    <option>60-64</option>
                 </select>
             </p>
             <p>
@@ -317,29 +321,40 @@
 
             <script>
                 function checkPremium() {
-                    var coverage = parseInt(document.querySelector('input[name="coverage"]:checked').value);
-                    var age = document.getElementById("agegroup").value;
+                    var coverage = parseFloat(document.querySelector('input[name="coverage"]:checked').value);
+                    var age = document.getElementById("agegroup").selectedIndex;
                     var ageFactor;
-
                     switch (age) {
-                        case "under 30":
+                        case 0:
                             ageFactor = 0.08;
                             break;
-                        case "30-34":
+                        case 1:
                             ageFactor = 0.09;
                             break;
-                        case "35-39":
+                        case 2:
                             ageFactor = 0.11;
                             break;
-                        case "40-44":
+                        case 3:
                             ageFactor = 0.17;
+                            break;
+                        case 4:
+                            ageFactor = 0.29;
+                            break;
+                        case 5:
+                            ageFactor = 0.48;
+                            break;
+                        case 6:
+                            ageFactor = 0.75;
+                            break;
+                        case 7:
+                            ageFactor = 1.17;
                             break;
                         default:
                             break;
                     }
 
-                    var premium = 10 + ageFactor * coverage;
-                    document.getElementById("result3").textContent = "$" + premium;
+                    var premium = 10 + ageFactor * coverage/1000;
+                    document.getElementById("result3").textContent = "$" + Math.round(premium*100)/100;
                 }
 
                 document.getElementById("insuranceButton").addEventListener('click', checkPremium, false);
@@ -351,11 +366,19 @@
 
         <div class="practice">
             <h1>For Loop Practice 1 </h1>
-            <p> Display the square of numer 1... N </p>
+            <p> Display the square of number 1... N </p>
             <p> N = <input type="number" min="1" max="10" id="inputnumber1"> </p>
             <p>
-                <input type="button" value="Click for Square">
+                <input type="button" id = "squareButton" value="Click for Square">
             </p>
+            <script>
+                function squareNum(){
+                    var inputNum = document.getElementById("inputnumber1").value;
+                    
+                } // End of func squareNum
+
+                document.getElementById("squareButton").addEventListener('click', squareNum, false);
+            </script>
 
         </div>
 
@@ -365,14 +388,32 @@
             <!--  Input number box -->
             <p> N = <input type="number" min="1" max="10" id="inputnumber2"> </p>
             <p>
-                <input type="button" value="Click for multiplication table">
+                <input type="button" id = "multTable" value="Click for multiplication table">
             </p>
 
             <!-- output section -->
-            <div id="output">
-
+            <div id="looptable">
+                
 
             </div>
+            <script>
+                function displayTable(){
+                    var inputNum = parseInt(document.getElementById("inputnumber2").value);
+                    var output = "";
+                    output += ('<table border = "1">');
+                    for(var i = 1; i <= inputNum; i++){
+                        output += ("<tr>");
+                        for(var j = 1; j <= i; j++){
+                            output += ("<td>" + (i*j) + "</td>");
+                        } // End of inner for
+                        output += ("</tr>");
+                    } // End of outer for
+                    output += ("<table>");
+                        document.getElementById("looptable").innerHTML = output;
+                } // End of func displayTable
+                // Binding event
+                document.getElementById("multTable").addEventListener('click', displayTable, false);
+            </script>
 
         </div>
 
@@ -398,7 +439,7 @@
         <div class="practice">
             <h1>Change Attribute -- Rolling a dice </h1>
             <p> <input type="button" id="roll" value="roll" /> </p>
-            <p> <img src="img/die1.png"> </p>
+            <p> <img src="img/die1.png" id = "dieImage"> </p>
             <table>
                 <tr>
                     <th>Result</th>
@@ -419,7 +460,40 @@
                     <td id="r6"></td>
                 </tr>
             </table>
+            <script>
+                /*
+                // practice on array
+                var testArray = [1, 2, 3, 4, 5, 6];
+                testArray[78] = 100
+                testArray[100] = 10;
+                testArray.push(7);
+                testArray.push(8);
+                console.log(testArray);
+                testArray.pop();
+                console.log(testArray);
 
+                for(var i in testArray){
+                    console.log(i + ":", testArray[i]);
+                }
+
+                testArray.forEach(element => console.log(element));
+                */
+                var diceArray = [0,0,0,0,0,0]
+                function rollDice(){
+                    // get random number [1-6]\
+                    var rollValue = Math.floor(Math.random()*(6) + 1);
+                    diceArray[rollValue - 1]++;
+                    // update image
+                    document.getElementById("dieImage").setAttribute("src", "img/die" + rollValue + ".png");
+                    
+                   
+                    document.getElementById("r" + rollValue).innerHTML = diceArray[rollValue - 1];
+                    
+               }
+
+               document.getElementById("roll").addEventListener('click', rollDice, false);
+
+            </script>
         </div>
 
 
@@ -441,7 +515,18 @@
                 <img src="img/usca5.jpg" alt="usca">
             </div>
             <script>
+                var imageList = document.querySelectorAll(".img-container-hide");
+                imageList[0].setAttribute("class", "ima-container");
+                var index = 0
+                function updateBanner(){
+                    imageList[index].setAttribute("class", "img-container-hide");
+                    index++;
+                    index = index % 5;
+                    imageList[index].setAttribute("class", "img-container");
+                }
 
+                //auto update
+                setInterval(updateBanner, 5000)
             </script>
 
 
@@ -477,6 +562,7 @@
                         <input id="lists" type="button" value="List current reservations">
                     </p>
                 </form>
+                <div id = "guestlist"></div>
                 <script src="js/hotel.js"></script>
             </div>
 
